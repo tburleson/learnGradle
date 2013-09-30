@@ -5,11 +5,6 @@ public class AnimeAction
 
 	private String name;
 
-	public void yo()
-	{
-		System.out.println("yo");
-	}
-
 	public String getName()
 	{
 		return name;

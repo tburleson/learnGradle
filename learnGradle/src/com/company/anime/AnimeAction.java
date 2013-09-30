@@ -6,4 +6,9 @@ public class AnimeAction {
 	{
 		System.out.println("yo");
 	}
+	
+	public String getName()
+	{
+		return "derf";
+	}
 }

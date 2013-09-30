@@ -1,0 +1,98 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'war'
+
+group = 'tburleson'
+version = '1.0'
+
+buildscript {
+	repositories {
+		maven {
+			url 'http://localhost:8081/artifactory/plugins-release'
+			credentials {
+				username = "${artifactory_user}"
+				password = "${artifactory_password}"
+			}
+		}
+		
+	}
+	dependencies {
+		classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '2.0.9')
+	}
+}
+
+allprojects {
+	apply plugin: 'artifactory'
+}
+
+artifactory {
+	contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+	publish {
+		repository {
+			repoKey = 'libs-release-local'
+			username = "${artifactory_user}"
+			password = "${artifactory_password}"
+			maven = true			
+		}
+	}
+	resolve {
+		repository {
+			repoKey = 'libs-release'
+			username = "${artifactory_user}"
+			password = "${artifactory_password}"
+			maven = true			
+		}
+	}
+}
+
+uploadArchives{
+	repositories{
+		mavenDeployer{
+			repository(url: "${artifactory_contextUrl}/libs-snapshot-local") {
+				authentication(userName: "${artifactory_user}", password: "${artifactory_password}")
+			}
+		}
+	}
+}
+
+sourceSets {
+    main {
+        java {
+			// add the real srouce to srcDir
+            srcDir 'src'
+        }
+    }
+}
+
+dependencies {
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.7.Final'
+	testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+task printProperties << {
+	sourceSets {
+		main {
+			println "\t java.srcDirs = ${java.srcDirs}"
+			println "\t resources.srcDirs = ${resources.srcDirs}"
+			println "\t java.files = ${java.files.name}"
+			println "\t allJava.files = ${allJava.files.name}"
+			println "\t resources.files = ${resources.files.name}"
+			println "\t allSource.files = ${allSource.files.name}"
+			println "\t output.classesDir = ${output.classesDir}"
+			println "\t output.resourcesDir = ${output.resourcesDir}"
+			println "\t output.files = ${output.files}"
+		}
+	}
+}
+
+task helloWorld (dependsOn: printProperties, description: "My first hello world task") {
+	
+}
+
+
+helloWorld.doLast{
+	println "hello, world"
+	println "description = " + description
+	println "handling file exists work"	
+
+}

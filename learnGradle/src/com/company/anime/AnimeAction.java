@@ -6,6 +6,7 @@ public class AnimeAction
 {
 	private String name;
 	private Date dob;
+	private String ssn;
 
 	public Date getDob()
 	{

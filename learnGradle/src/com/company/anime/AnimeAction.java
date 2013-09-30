@@ -1,9 +1,11 @@
 package com.company.anime;
 
+import java.util.Date;
+
 public class AnimeAction
 {
-
 	private String name;
+	private Date dob;
 
 	public String getName()
 	{
